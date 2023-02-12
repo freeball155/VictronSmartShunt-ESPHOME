@@ -33,6 +33,7 @@ CONF_MIN_BATTERY_VOLTAGE = "min_battery_voltage"
 CONF_MAX_BATTERY_VOLTAGE = "max_battery_voltage"
 CONF_AMOUNT_OF_CHARGED = "amount_of_charged"
 CONF_BMV_ALARM_TEXT = "bmv_alarm_text"
+CONF_BMV_RELAY_TEXT = "bmv_relay_text"
 CONF_BMV_TEXT = "bmv_text"
 CONF_LAST_FULL_CHARGE = "last_full_charge"
 CONF_DEEPEST_DISCHARGE = "deepest_discharge"
@@ -196,6 +197,9 @@ CONFIG_SCHEMA = cv.Schema(
             device_class=DEVICE_CLASS_POWER,
         ),
         cv.Optional(CONF_BMV_ALARM_TEXT): text_sensor.TEXT_SENSOR_SCHEMA.extend(
+            {cv.GenerateID(): cv.declare_id(text_sensor.TextSensor)}
+        ),
+        cv.Optional(CONF_BMV_RELAY_TEXT): text_sensor.TEXT_SENSOR_SCHEMA.extend(
             {cv.GenerateID(): cv.declare_id(text_sensor.TextSensor)}
         ),
         cv.Optional(CONF_BMV_TEXT): text_sensor.TEXT_SENSOR_SCHEMA.extend(
@@ -375,7 +379,11 @@ def to_code(config):
         sens = cg.new_Pvariable(conf[CONF_ID])
         yield text_sensor.register_text_sensor(sens, conf)
         cg.add(var.set_bmv_alarm_sensor(sens))
-
+    if CONF_BMV_RELAY_TEXT in config:
+        conf = config[CONF_BMV_RELAY_TEXT]
+        sens = cg.new_Pvariable(conf[CONF_ID])
+        yield text_sensor.register_text_sensor(sens, conf)
+        cg.add(var.set_bmv_relay_sensor(sens))
     if CONF_BMV_TEXT in config:
         conf = config[CONF_BMV_TEXT]
         sens = cg.new_Pvariable(conf[CONF_ID])

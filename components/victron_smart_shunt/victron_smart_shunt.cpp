@@ -33,6 +33,7 @@ void VictronSmartShuntComponent::dump_config() {
   LOG_SENSOR("  ", "State of Charge", state_of_charge_sensor_);
 
   LOG_TEXT_SENSOR("  ", "BMV-Alarm", bmv_alarm_sensor_);
+  LOG_TEXT_SENSOR("  ", "BMV-Relay", bmv_relay_sensor_);
   LOG_TEXT_SENSOR("  ", "BMV-Alarm Reason", bmv_alarm_reason_sensor_);
   LOG_TEXT_SENSOR("  ", "BMV-PID", bmv_sensor_);
 
@@ -400,6 +401,9 @@ void VictronSmartShuntComponent::handle_value_() {
   } else if (label_ == "Alarm") {
     if (bmv_alarm_sensor_ != nullptr)
       bmv_alarm_sensor_->publish_state(value_);
+  } else if (label_ == "Relay") {
+    if (bmv_relay_sensor_ != nullptr)
+      bmv_relay_sensor_->publish_state(value_);
   } else if (label_ == "H7") {
     if (min_battery_voltage_sensor_ != nullptr)
       // mV to V
